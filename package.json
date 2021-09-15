@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/super-power-ultra/code-cleaner/issues"
   },
-  "homepage": "https://github.com/super-power-ultra/code-cleaner#readme"
+  "homepage": "https://github.com/super-power-ultra/code-cleaner#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
