@@ -7,6 +7,8 @@ const staticDir = path.join(__dirname, './public');
 const indexPage = path.join(staticDir, 'index.html');
 
 app.use(express.static(staticDir));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/js/remove', require('./routes/remove'));
 app.use('/js/remove_html', require('./routes/remove_html'));
