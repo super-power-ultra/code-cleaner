@@ -4,6 +4,7 @@
   font-size: 15px;
   line-height: 1.3;
 }
+
 ul {
   list-style: none;
 }
@@ -11,6 +12,9 @@ ul {
 .tabmenu {
   margin: 0 auto;
   position: relative;
+  width: 900px;
+  float: left;
+  margin: 10px;
 }
 .tabmenu ul li {
   float: left;
