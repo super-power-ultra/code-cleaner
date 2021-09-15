@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/super-power-ultra/code-cleaner#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "js-beautify": "^1.14.0"
   }
 }
