@@ -8,8 +8,8 @@ const indexPage = path.join(staticDir, 'index.html');
 
 app.use(express.static(staticDir));
 
-app.use('/js/remove', require('./js/remove'));
-app.use('/js/remove_html', require('./js/remove_html'));
+app.use('/js/remove', require('./routes/remove'));
+app.use('/js/remove_html', require('./routes/remove_html'));
 
 app.get('/', function(req, res) {
     res.sendFile(indexPage)
