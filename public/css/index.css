@@ -44,8 +44,8 @@ input[type='checkbox'] {
 }
 
 input:not([type='checkbox']):focus {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgb(0, 0, 0);
+  box-shadow: 0 1px 0 0 rgb(0, 0, 0);
 }
 
 header {
@@ -116,4 +116,5 @@ main .tab-content label {
 
 footer {
   margin-top: 2rem;
+  padding: 1rem;
 }
