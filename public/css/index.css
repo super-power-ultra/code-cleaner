@@ -45,6 +45,7 @@ ul {
   top: 40px;
   box-sizing: border-box;
   border: 5px solid #f9f9f9;
+  min-width: 900px;
 }
 .btnCon:target {
   background: #ccc;
