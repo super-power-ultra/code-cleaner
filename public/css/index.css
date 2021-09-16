@@ -8,6 +8,10 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 
+.red {
+  color: red;
+}
+
 ul {
   list-style: none;
 }
