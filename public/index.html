@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Code Cleaner</title>
     <link rel="stylesheet" type="text/css" href="./css/index.css" />
+    <script src="./js/index.js" defer></script>
   </head>
 
   <body>
@@ -13,10 +14,10 @@
         <nav>
           <ul>
             <li>
-              <button>JS</button>
+              <button onclick="onNavBtnClickHandler('tab-js')">JS</button>
             </li>
             <li>
-              <button>HTML</button>
+              <button onclick="onNavBtnClickHandler('tab-html')">HTML</button>
             </li>
           </ul>
         </nav>
@@ -25,7 +26,7 @@
 
     <main>
       <div class="tab-content">
-        <div id="tab-1" class="tab-pane active">
+        <div id="tab-js" class="tab-pane active">
           <h2>JS Code Cleaner</h2>
           <p class="red">입력하지 않은 내용은 default 스타일로 적용됩니다.</p>
 
@@ -160,7 +161,7 @@
             <button type="submit">실행</button>
           </form>
         </div>
-        <div id="tab-2" class="tab-pane">
+        <div id="tab-html" class="tab-pane">
           <h2>HTML Code Cleaner</h2>
           <p class="red">입력하지 않은 내용은 default 스타일로 적용됩니다.</p>
 

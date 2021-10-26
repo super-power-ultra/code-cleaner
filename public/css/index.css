@@ -120,6 +120,14 @@ main .tab-content label {
   margin-bottom: 2rem;
 }
 
+main .tab-content .tab-pane {
+  display: none;
+}
+
+main .tab-content .tab-pane.active {
+  display: block;
+}
+
 footer {
   margin-top: 2rem;
   padding: 1rem;
