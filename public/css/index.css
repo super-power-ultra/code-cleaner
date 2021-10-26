@@ -74,6 +74,12 @@ header nav ul {
 
 header nav ul button {
   padding: 1rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+header nav ul button:hover {
+  color: antiquewhite;
 }
 
 .red {
