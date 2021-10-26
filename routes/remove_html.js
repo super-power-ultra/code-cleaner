@@ -63,7 +63,11 @@ function checkBody(req, res, next) {
     result_dir_name: resultDirName,
   } = req.body;
 
-  if (!originDirName || !resultDirName) return res.json('checkBody err');
+  if (!originDirName || !resultDirName) {
+    return res.status(400).json({
+      message: 'Bad Request',
+    });
+  }
 
   req.data = {
     originDirName,
