@@ -22,20 +22,20 @@ function removeComment(originDirName2, resultDirName2, objectData) {
       return;
     }
     // 하위파일들에 대한 반복문
-    filenames.forEach((filename, index) => {
+    filenames.forEach((filename) => {
       // 하위파일들의 형식을 확인
 
-      fs.stat(`${originDirName2}\\${filename}`, (error, stats) => {
-        if (error) {
-          console.log(error);
+      fs.stat(`${originDirName2}\\${filename}`, (error2, stats) => {
+        if (error2) {
+          console.log(error2);
         }
         // 파일일 경우 처리
         if (stats.isFile()) {
           // javascript 파일일 경우 처리
-          if (path.extname(filename) == '.html') {
-            fs.readFile(`${originDirName2}\\${filename}`, 'utf-8', (error, data) => {
-              if (error) {
-                console.log(error);
+          if (path.extname(filename) === '.html') {
+            fs.readFile(`${originDirName2}\\${filename}`, 'utf-8', (error3, data) => {
+              if (error3) {
+                console.log(error3);
                 return;
               }
               const temp3 = beautify(data, {
@@ -57,39 +57,39 @@ function removeComment(originDirName2, resultDirName2, objectData) {
   });
 }
 
-function checkBody(req, res) {
-  return new Promise((resolve, reject) => {
-    const data = {};
-    data.indent_size = 4;
-    if (req.body.origin_dir_name !== '') {
-      originDirName = req.body.origin_dir_name;
-    } else {
-      reject();
-    }
-    if (req.body.result_dir_name !== '') {
-      resultDirName = req.body.result_dir_name;
-    } else {
-      reject();
-    }
-    if (req.body.pattern !== '' && req.body.pattern !== null) {
-      data.pattern = req.body.pattern;
-    }
-    if (req.body.pattern_type !== '' && req.body.pattern_type !== null) {
-      data.pattern_type = req.body.pattern_type;
-    }
-    if (req.body.indent_size !== '' && req.body.indent_size !== null) {
-      data.indent_size = req.body.indent_size;
-    }
-    resolve(data);
-  });
+function checkBody(req, res, next) {
+  console.log('checkBody middleware');
+
+  const data = {};
+  data.indent_size = 4;
+  if (req.body.origin_dir_name !== '') {
+    originDirName = req.body.origin_dir_name;
+  } else {
+    return res.json('checkBody err');
+  }
+  if (req.body.result_dir_name !== '') {
+    resultDirName = req.body.result_dir_name;
+  } else {
+    return res.json('checkBody err');
+  }
+  if (req.body.pattern !== '' && req.body.pattern !== null) {
+    data.pattern = req.body.pattern;
+  }
+  if (req.body.pattern_type !== '' && req.body.pattern_type !== null) {
+    data.pattern_type = req.body.pattern_type;
+  }
+  if (req.body.indent_size !== '' && req.body.indent_size !== null) {
+    data.indent_size = req.body.indent_size;
+  }
+
+  req.data = data;
+  return next();
 }
 
-router.post('/', (req, res) => {
-  checkBody(req, res).then((objectData) => {
-    res.redirect('/');
-    removeComment(originDirName, resultDirName, objectData);
-  }).catch(() => {
-    res.redirect('/');
+router.post('/', checkBody, (req, res) => {
+  removeComment(originDirName, resultDirName, req.data);
+  res.json({
+    message: 'done',
   });
 });
 
