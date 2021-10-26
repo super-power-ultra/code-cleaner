@@ -13,10 +13,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/js/remove', require('./routes/remove'));
 app.use('/js/remove_html', require('./routes/remove_html'));
 
-app.get('/', function(req, res) {
-    res.sendFile(indexPage)
+app.get('/', (req, res) => {
+  res.sendFile(indexPage);
 });
 
-app.listen(65001, function() {
-    console.log('Server Running at http://localhost:65001');
+app.listen(65001, () => {
+  console.log('Server Running at http://localhost:65001');
 });
