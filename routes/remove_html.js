@@ -5,18 +5,16 @@ const express = require('express');
 
 const router = express.Router();
 
-let originDirName;
-let resultDirName;
-
-function removeComment(originDirName2, resultDirName2, objectData) {
+function removeComment(objectData) {
+  const { originDirName, resultDirName } = objectData;
   // 변환 파일이 저장될 디렉터리가 없으면 생성
-  if (!fs.existsSync(resultDirName2)) {
-    fs.mkdir(resultDirName2, () => {
-      console.log(resultDirName2);
+  if (!fs.existsSync(resultDirName)) {
+    fs.mkdir(resultDirName, () => {
+      console.log(resultDirName);
     });
   }
   // origin 디렉터리 읽기
-  fs.readdir(originDirName2, (error, filenames) => {
+  fs.readdir(originDirName, (error, filenames) => {
     if (error) {
       console.log(error);
       return;
@@ -25,7 +23,7 @@ function removeComment(originDirName2, resultDirName2, objectData) {
     filenames.forEach((filename) => {
       // 하위파일들의 형식을 확인
 
-      fs.stat(`${originDirName2}\\${filename}`, (error2, stats) => {
+      fs.stat(`${originDirName}\\${filename}`, (error2, stats) => {
         if (error2) {
           console.log(error2);
         }
@@ -33,7 +31,7 @@ function removeComment(originDirName2, resultDirName2, objectData) {
         if (stats.isFile()) {
           // javascript 파일일 경우 처리
           if (path.extname(filename) === '.html') {
-            fs.readFile(`${originDirName2}\\${filename}`, 'utf-8', (error3, data) => {
+            fs.readFile(`${originDirName}\\${filename}`, 'utf-8', (error3, data) => {
               if (error3) {
                 console.log(error3);
                 return;
@@ -42,15 +40,19 @@ function removeComment(originDirName2, resultDirName2, objectData) {
                 indent_size: objectData.indent_size,
               });
               // replace한 데이터를 다시 덮어쓰기
-              fs.writeFile(`${resultDirName2}\\${filename}`, temp3, 'utf-8', () => {
-                console.log(`${resultDirName2}\\${filename}`);
+              fs.writeFile(`${resultDirName}\\${filename}`, temp3, 'utf-8', () => {
+                console.log(`${resultDirName}\\${filename}`);
               });
             });
           }
         }
         // 디렉터리일 경우 해당 디렉터리부터 다시 함수호출
         if (stats.isDirectory()) {
-          removeComment(`${originDirName2}\\${filename}`, `${resultDirName2}\\${filename}`, objectData);
+          removeComment({
+            ...objectData,
+            originDirName: `${originDirName}\\${filename}`,
+            resultDirName: `${resultDirName}\\${filename}`,
+          });
         }
       });
     });
@@ -63,12 +65,12 @@ function checkBody(req, res, next) {
   const data = {};
   data.indent_size = 4;
   if (req.body.origin_dir_name !== '') {
-    originDirName = req.body.origin_dir_name;
+    data.originDirName = req.body.origin_dir_name;
   } else {
     return res.json('checkBody err');
   }
   if (req.body.result_dir_name !== '') {
-    resultDirName = req.body.result_dir_name;
+    data.resultDirName = req.body.result_dir_name;
   } else {
     return res.json('checkBody err');
   }
@@ -87,8 +89,9 @@ function checkBody(req, res, next) {
 }
 
 router.post('/', checkBody, (req, res) => {
-  removeComment(originDirName, resultDirName, req.data);
-  res.json({
+  console.log({ data: req.data });
+  removeComment(req.data);
+  return res.json({
     message: 'done',
   });
 });
