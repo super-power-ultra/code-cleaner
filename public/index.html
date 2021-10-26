@@ -1,176 +1,201 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset='utf-8'>
+  <head>
+    <meta charset="utf-8" />
     <title>Code Cleaner</title>
-    <link rel="stylesheet" type="text/css" href="/css/index.css">
-    <script>
-        location.href = "#tab1";
-    </script>
-</head>
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+  </head>
 
-<body style="width: 100%;">
-    <section style="width: 900px; float: left; margin: 10px;">
-        <div class="tabmenu">
-            <ul>
-                <li id="tab1" class="btnCon"><a class="btn first" href="#tab1">JS</a>
-                    <div class="tabCon" style="width: 900px">
-                        <form name="form" action="/js/remove" method="POST">
-                            <h1>JS Code Cleaner</h1>
-                            <h4 style="color: red;">입력하지 않은 내용은 default 스타일로 적용됩니다.</h4>
-                            <br>
-                            <strong>오리지날 디렉터리 경로(절대경로) : </strong>
-                            <span>
-                                <input type="text" name="origin_dir_name" />
-                            </span>
-                            <br>
-                            <strong>결과 저장 디렉터리 경로(절대경로) : </strong>
-                            <span>
-                                <input type="text" name="result_dir_name" />
-                            </span>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <strong>제거할 주석 패턴 : </strong>
-                                        <span>
-                                            <input type="text" name="pattern" placeholder="WORKAREA" />
-                                        </span>
-                                        <br>
-                                        <h3 style="color: red;">/*패턴*/형식의 주석이 제거됩니다.</h3>
-                                    </td>
-                                    <td>
-                                        <strong>패턴 형식 : </strong>
-                                        <span>
-                                            <input type="radio" name="pattern_type" value="prefix" checked="checked" />prefix
-                                            <input type="radio" name="pattern_type" value="suffix" />suffix
-                                            <input type="radio" name="pattern_type" value="all" />all
-                                        </span>
-                                        <br>
-                                        <strong style="color: red;">주의!! all을 선택시 의도하지 않은 주석이 제거될 가능성이 높습니다.</strong>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>제거할 주석 패턴 : </strong>
-                                        <span>
-                                            <input type="text" name="pattern_line" />
-                                        </span>
-                                        <br>
-                                        <h3 style="color: red;">// 형식의 주석이 제거됩니다.</h3>
-                                    </td>
-                                    <td>
-                                        <strong>패턴 형식 : </strong>
-                                        <span>
-                                            <input type="radio" name="pattern_type_line" value="prefix" checked="checked" />prefix
-                                            <input type="radio" name="pattern_type_line" value="all" />all
-                                        </span>
-                                        <br>
-                                        <strong style="color: red;">주의!! all을 선택시 의도하지 않은 주석이 제거될 가능성이 높습니다.</strong>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>들여쓰기 칸 수 : </strong>
-                                        <span>
-                                            <input type="number" name="indent_size" placeholder="4" />
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong>tab으로 띄어쓰기 : </strong>
-                                        <span>
-                                            <input type="checkbox" name="indent_with_tab" placeholder="false" />
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>최초 들여쓰기 레벨 : </strong>
-                                        <span>
-                                            <input type="number" name="indent_level" placeholder="0" />
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong>들여쓰기 스타일 : </strong>
-                                        <span>
-                                            <input type="radio" name="brace_style" value="collapse" checked="checked" />collapse
-                                            <input type="radio" name="brace_style" value="expand" />expand
-                                            <input type="radio" name="brace_style" value="end-expand" />end-expand
-                                            <input type="radio" name="brace_style" value="none" />none
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>Chained Method에 대한 들여쓰기 막기 : </strong>
-                                        <span>
-                                            <input type="checkbox" name="unindent_chained_methods" placeholder="false" />
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong>연산자 위치 : </strong>
-                                        <span>
-                                            <input type="radio" name="operator_position" value="before-newline" checked="checked" />before-newline
-                                            <input type="radio" name="operator_position" value="after-newline" />after-newline
-                                            <input type="radio" name="operator_position" value="preserve-newline" />preserve-newline
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>비어있는 line 제거 : </strong>
-                                        <span>
-                                            <input type="checkbox" name="preserve_newlines" placeholder="false" />
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong>일정 이상 초과하는 줄을 1줄로 만듬 : </strong>
-                                        <span>
-                                            <input type="number" name="max_preserve_newlines" placeholder="10" />
-                                        </span>
-                                        <br>
-                                        <strong style="color: red;">비어있는 line 제거를 체크할 경우 해당 옵션은 1로 고정됩니다.</strong>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br>
-                            <br>
-                            <input type="submit" value="실행" />
-                        </form>
-                    </div>
-                </li>
-                <li id="tab2" class="btnCon"><a class="btn" href="#tab2">HTML</a>
-                    <div class="tabCon" style="width: 900px">
-                        <form name="form" action="/js/remove_html" method="POST">
-                            <h1>HTML Code Cleaner</h1>
-                            <h4 style="color: red;">입력하지 않은 내용은 default 스타일로 적용됩니다.</h4>
-                            <br>
-                            <strong>오리지날 디렉터리 경로(절대경로) : </strong>
-                            <span>
-                                <input type="text" name="origin_dir_name" />
-                            </span>
-                            <br>
-                            <strong>결과 저장 디렉터리 경로(절대경로) : </strong>
-                            <span>
-                                <input type="text" name="result_dir_name" />
-                            </span>
-                            <br>
-                            <br>
-                            <br>
+  <body>
+    <header>
+      <div class="header-body">
+        <h1>Code Cleaner</h1>
+        <nav>
+          <ul>
+            <li>
+              <button>JS</button>
+            </li>
+            <li>
+              <button>HTML</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-                            <strong>들여쓰기 칸 수 : </strong>
-                            <span>
-                                <input type="number" name="indent_size" placeholder="4" />
-                            </span>
-                            <br>
-                            <br>
-                            <input type="submit" value="실행" />
-                        </form>
-                    </div>
-                </li>
-            </ul>
+    <main>
+      <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
+          <h2>JS Code Cleaner</h2>
+          <p class="red">입력하지 않은 내용은 default 스타일로 적용됩니다.</p>
+
+          <form name="form" action="/js/remove" method="POST">
+            <div class="form-body">
+              <label>
+                <b>오리지날 디렉터리 경로(절대경로) : </b>
+                <input
+                  type="text"
+                  name="origin_dir_name"
+                  placeholder="C:\inputDir"
+                />
+              </label>
+
+              <label>
+                <b>결과 저장 디렉터리 경로(절대경로) : </b>
+                <input
+                  type="text"
+                  name="result_dir_name"
+                  placeholder="C:\outputDir"
+                />
+              </label>
+
+              <label>
+                <b>제거할 주석 패턴 : </b>
+                <input type="text" name="pattern" placeholder="WORKAREA" />
+                <p class="red">/*패턴*/형식의 주석이 제거됩니다.</p>
+              </label>
+
+              <label>
+                <b>패턴 형식 : </b>
+
+                <select name="pattern_type" id="pattern_type">
+                  <option value="prefix">prefix</option>
+                  <option value="suffix">suffix</option>
+                  <option value="all">all</option>
+                </select>
+
+                <p class="red">
+                  주의!! all을 선택시 의도하지 않은 주석이 제거될 가능성이
+                  높습니다.
+                </p>
+              </label>
+
+              <label>
+                <b>제거할 주석 패턴 : </b>
+                <input type="text" name="pattern_line" />
+                <p class="red">// 형식의 주석이 제거됩니다.</p>
+              </label>
+
+              <label>
+                <b>패턴 형식 : </b>
+                <select name="pattern_type_line">
+                  <option value="prefix">prefix</option>
+                  <option value="all">all</option>
+                </select>
+
+                <p class="red">
+                  주의!! all을 선택시 의도하지 않은 주석이 제거될 가능성이
+                  높습니다.
+                </p>
+              </label>
+
+              <label>
+                <b>들여쓰기 칸 수 : </b>
+                <input type="number" name="indent_size" placeholder="4" />
+              </label>
+
+              <label>
+                <b>tab으로 띄어쓰기 : </b>
+                <input
+                  type="checkbox"
+                  name="indent_with_tab"
+                  placeholder="false"
+                />
+              </label>
+
+              <label>
+                <b>최초 들여쓰기 레벨 : </b>
+                <input type="number" name="indent_level" placeholder="0" />
+              </label>
+              <label>
+                <b>들여쓰기 스타일 : </b>
+                <select name="brace_style">
+                  <option value="collapse">collapse</option>
+                  <option value="expand">expand</option>
+                  <option value="end-expand">end-expand</option>
+                  <option value="none">none</option>
+                </select>
+              </label>
+
+              <label>
+                <b>Chained Method에 대한 들여쓰기 막기 : </b>
+                <input
+                  type="checkbox"
+                  name="unindent_chained_methods"
+                  placeholder="false"
+                />
+              </label>
+
+              <label>
+                <b>연산자 위치 : </b>
+                <select name="operator_position">
+                  <option value="before-newline">before-newline</option>
+                  <option value="after-newline">after-newline</option>
+                  <option value="preserve-newline">preserve-newline</option>
+                </select>
+              </label>
+
+              <label>
+                <b>비어있는 line 제거 : </b>
+                <input
+                  type="checkbox"
+                  name="preserve_newlines"
+                  placeholder="false"
+                />
+              </label>
+
+              <label>
+                <b>일정 이상 초과하는 줄을 1줄로 만듬 : </b>
+                <input
+                  type="number"
+                  name="max_preserve_newlines"
+                  placeholder="10"
+                />
+                <p class="red">
+                  비어있는 line 제거를 체크할 경우 해당 옵션은 1로 고정됩니다.
+                </p>
+              </label>
+            </div>
+
+            <button type="submit">실행</button>
+          </form>
         </div>
-    </section>
-</body>
+        <div id="tab-2" class="tab-pane">
+          <h2>HTML Code Cleaner</h2>
+          <p class="red">입력하지 않은 내용은 default 스타일로 적용됩니다.</p>
 
+          <form name="form" action="/js/remove_html" method="POST">
+            <div class="form-body">
+              <label>
+                <b>오리지날 디렉터리 경로(절대경로) : </b>
+                <input
+                  type="text"
+                  name="origin_dir_name"
+                  placeholder="C:\inputDir"
+                />
+              </label>
+
+              <label>
+                <b>결과 저장 디렉터리 경로(절대경로) : </b>
+                <input
+                  type="text"
+                  name="result_dir_name"
+                  placeholder="C:\outputDir"
+                />
+              </label>
+
+              <label>
+                <b>들여쓰기 칸 수 : </b>
+                <input type="number" name="indent_size" placeholder="4" />
+              </label>
+            </div>
+
+            <button type="submit">실행</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer>COPYRIGHT © 2021 super power ultra, All rights Reserved</footer>
+  </body>
 </html>
