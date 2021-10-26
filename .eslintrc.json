@@ -10,6 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-plusplus": "off",
     "linebreak-style": "off",
     "no-console": "off"
   }
