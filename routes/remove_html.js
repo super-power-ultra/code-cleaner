@@ -57,29 +57,19 @@ function removeComment(objectData) {
 function checkBody(req, res, next) {
   console.log('checkBody middleware');
 
-  const data = {};
-  data.indent_size = 4;
-  if (req.body.origin_dir_name !== '') {
-    data.originDirName = req.body.origin_dir_name;
-  } else {
-    return res.json('checkBody err');
-  }
-  if (req.body.result_dir_name !== '') {
-    data.resultDirName = req.body.result_dir_name;
-  } else {
-    return res.json('checkBody err');
-  }
-  if (req.body.pattern !== '' && req.body.pattern !== null) {
-    data.pattern = req.body.pattern;
-  }
-  if (req.body.pattern_type !== '' && req.body.pattern_type !== null) {
-    data.pattern_type = req.body.pattern_type;
-  }
-  if (req.body.indent_size !== '' && req.body.indent_size !== null) {
-    data.indent_size = req.body.indent_size;
-  }
+  const {
+    indent_size: indentSize,
+    origin_dir_name: originDirName,
+    result_dir_name: resultDirName,
+  } = req.body;
 
-  req.data = data;
+  if (!originDirName || !resultDirName) return res.json('checkBody err');
+
+  req.data = {
+    originDirName,
+    resultDirName,
+    indent_size: Number(indentSize) || 4,
+  };
   return next();
 }
 
