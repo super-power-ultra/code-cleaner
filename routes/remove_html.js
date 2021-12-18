@@ -5,92 +5,84 @@ const express = require('express');
 
 const router = express.Router();
 
-let origin_dir_name;
-let result_dir_name;
+function removeComment(objectData) {
+  const { originDirName, resultDirName } = objectData;
 
-router.post('/', (req, res) => {
-  checkBody(req, res).then((objectData) => {
-    res.redirect('/');
-    removeComment(origin_dir_name, result_dir_name, objectData);
-  }).catch(() => {
-    res.redirect('/');
-  });
-});
+  try {
+    // 변환 파일이 저장될 디렉터리가 없으면 생성
+    if (!fs.existsSync(resultDirName)) {
+      fs.mkdirSync(resultDirName);
+    }
 
-function removeComment(origin_dir_name, result_dir_name, objectData) {
-  // 변환 파일이 저장될 디렉터리가 없으면 생성
-  if (!fs.existsSync(result_dir_name)) {
-    fs.mkdir(result_dir_name, () => {
-      console.log(result_dir_name);
+    // origin 디렉터리 읽기
+    const filenames = fs.readdirSync(originDirName);
+
+    // 하위파일들에 대한 반복문
+    filenames.forEach((filename) => {
+      const targetFile = `${originDirName}\\${filename}`;
+      const targetOutputFile = `${resultDirName}\\${filename}`;
+
+      // 하위파일들의 형식을 확인
+      const stats = fs.statSync(targetFile);
+
+      // 파일일 경우 처리
+      if (stats.isFile() && path.extname(filename) === '.html') {
+        // javascript 파일일 경우 처리
+        const origin = fs.readFileSync(targetFile, 'utf-8');
+        const beautified = beautify(origin, {
+          indent_size: objectData.indent_size,
+        });
+          // replace한 데이터를 다시 덮어쓰기
+        fs.writeFileSync(targetOutputFile, beautified, 'utf-8');
+        console.log(`done: ${targetOutputFile}`);
+        return;
+      }
+
+      // 디렉터리일 경우 해당 디렉터리부터 다시 함수호출
+      if (stats.isDirectory()) {
+        removeComment({
+          ...objectData,
+          originDirName: targetFile,
+          resultDirName: targetOutputFile,
+        });
+      }
+    });
+  } catch (error) {
+    console.log({ error });
+    return false;
+  }
+  return true;
+}
+
+function checkBody(req, res, next) {
+  console.log('checkBody middleware');
+
+  const {
+    indent_size: indentSize,
+    origin_dir_name: originDirName,
+    result_dir_name: resultDirName,
+  } = req.body;
+
+  if (!originDirName || !resultDirName) {
+    return res.status(400).json({
+      message: 'Bad Request',
     });
   }
-  // origin 디렉터리 읽기
-  fs.readdir(origin_dir_name, (error, filenames) => {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    // 하위파일들에 대한 반복문
-    filenames.forEach((filename, index) => {
-      // 하위파일들의 형식을 확인
 
-      fs.stat(`${origin_dir_name}\\${filename}`, (error, stats) => {
-        if (error) {
-          console.log(error);
-        }
-        // 파일일 경우 처리
-        if (stats.isFile()) {
-          // javascript 파일일 경우 처리
-          if (path.extname(filename) == '.html') {
-            fs.readFile(`${origin_dir_name}\\${filename}`, 'utf-8', (error, data) => {
-              if (error) {
-                console.log(error);
-                return;
-              }
-              const temp3 = beautify(data, {
-                indent_size: objectData.indent_size,
-              });
-              // replace한 데이터를 다시 덮어쓰기
-              fs.writeFile(`${result_dir_name}\\${filename}`, temp3, 'utf-8', () => {
-                console.log(`${result_dir_name}\\${filename}`);
-              });
-            });
-          }
-        }
-        // 디렉터리일 경우 해당 디렉터리부터 다시 함수호출
-        if (stats.isDirectory()) {
-          removeComment(`${origin_dir_name}\\${filename}`, `${result_dir_name}\\${filename}`, objectData);
-        }
-      });
-    });
-  });
+  req.data = {
+    originDirName,
+    resultDirName,
+    indent_size: Number(indentSize) || 4,
+  };
+  return next();
 }
 
-function checkBody(req, res) {
-  return new Promise((resolve, reject) => {
-    const data = new Object();
-    data.indent_size = 4;
-    if (req.body.origin_dir_name != '') {
-      origin_dir_name = req.body.origin_dir_name;
-    } else {
-      reject();
-    }
-    if (req.body.result_dir_name != '') {
-      result_dir_name = req.body.result_dir_name;
-    } else {
-      reject();
-    }
-    if (req.body.pattern != '' && req.body.pattern != null) {
-      data.pattern = req.body.pattern;
-    }
-    if (req.body.pattern_type != '' && req.body.pattern_type != null) {
-      data.pattern_type = req.body.pattern_type;
-    }
-    if (req.body.indent_size != '' && req.body.indent_size != null) {
-      data.indent_size = req.body.indent_size;
-    }
-    resolve(data);
+router.post('/', checkBody, (req, res) => {
+  console.log({ data: req.data });
+  const isDone = removeComment(req.data);
+  return res.json({
+    message: isDone ? 'done' : 'fail',
   });
-}
+});
 
 module.exports = router;
